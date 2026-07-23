@@ -28,3 +28,5 @@ You are free to study, copy, modify, and use any code fragments (including the x
 It is prohibited to deploy (deploy), host, or publish this repository in its entirety (or a substantial portion of it) as a standalone public website, web application, or online service. The creation of clone/duplicate websites will be prohibited by DMCA complaints to hosting providers.
 
 *Полный текст юридических условий находится в файле [LICENSE.md](./LICENSE).*
+
+*The full text of the legal terms is in the file [LICENSE.md](./LICENSE).*
