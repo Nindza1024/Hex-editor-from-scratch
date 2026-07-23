@@ -1,6 +1,9 @@
+>
 > 🚧 **Статус проекта: В разработке (Work in Progress)**
+> 
 
 Проект активно пишется с нуля. Готовые модули отмечены ниже. Вы можете следить за обновлениями или подписаться на репозиторий!
+
 The project is actively being written from scratch. The ready-made modules are marked below. You can follow the updates or subscribe to the repository!
 
 
