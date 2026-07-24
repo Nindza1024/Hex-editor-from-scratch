@@ -6,7 +6,7 @@
 Рекомендуемый объем загружаемых файлов не более 100 кБайт. Загрузка файлов большего обьема может привести к долгой загрузке и подвисанию сайта.
 
 
-Начнем создание 16-ричного редактора с создания сайта с html разметкой. Для этого создаем файл с названием index.html и добавляем в него следующий код.
+Начнем создание 16-ричного редактора с создания сайта с html разметкой. Для этого создаем файл с названием index.html и добавляем в него следующий код:
 
 
 
@@ -79,10 +79,75 @@
 
 После этого необходимо создать место где будет выводится на экран информация из файла в 16-ричной системе. для этого создадим несколько ``` <div></div> ```
 
-В результате после запуска файла index.htm должно получиться следующее:
+В результате после запуска файла index.html должно получиться следующее:
 
 ![Результат работы чистого html](../Images_for_Learning_Articles/Images_0.png)
 
-Теперь когда основная разметка готова необходимо добавить стили к существующим элементам
+Теперь когда основная разметка готова необходимо добавить стили к существующим элементам. Для этого создадим в той же папке новый файл с названием style.css и добавим в него следующий код:
+
+
+```css
+/*Стили для текстового поля в центре. Элементы с классом "inputDann" будут генерироваться в javascript*/
+.inputDann{
+   height: 45px;
+   width: 45px;
+   text-align: center;
+   font-size: 25px;
+}
+.infoNumber{   
+   height: 45px;
+   width: 45px;
+   font-size: 25px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+/*Основные стили сайта*/
+.output{
+   background: #d5d5ff;
+   width: 1250px;
+   font-size: 25px;
+   display: flex;
+   flex-direction: column;
+}
+.outputDann{
+   display: flex;
+   flex-direction: column;
+}
+.horizontal{
+   display: flex;
+   flex-direction: row;
+}
+
+/*Стили для окон в которые будет выводиться информация из файла*/
+.Number{
+   width: 10%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   border: double;
+}
+.TextDann{
+   width: 20%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   border: double;
+}
+.HexDann{
+   width: 70%;
+   height: 100%;
+   display: flex;
+   justify-content: flex-start;
+   gap: 1.1%;
+   align-items: center;
+   border: double;
+}
+```
+
+Теперь если запустить файл index.html должно получиться следующее:
+
+![Результат работы чистого html](../Images_for_Learning_Articles/Images_1.png)
 
 
