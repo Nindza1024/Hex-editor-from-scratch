@@ -87,11 +87,16 @@
 
 
 ```css
-/*Стили для текстового поля в центре. Элементы с классом "inputDann" будут генерироваться в javascript*/
+/*Стили для текстового поля в центре. Элементы с классом "inputDann" и "inputDannText" будут генерироваться в javascript*/
 .inputDann{
    height: 45px;
    width: 45px;
    text-align: center;
+   font-size: 25px;
+}
+.inputDannText{
+   height: 45px;
+   width: 100%;
    font-size: 25px;
 }
 .infoNumber{   
