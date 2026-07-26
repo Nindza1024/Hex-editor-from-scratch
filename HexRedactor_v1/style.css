@@ -1,0 +1,62 @@
+/*Стили для текстового поля в центре. Элементы с классом "inputDann" и "inputDannText" будут генерироваться в javascript*/
+.inputDann{
+   height: 45px;
+   width: 45px;
+   text-align: center;
+   font-size: 25px;
+}
+.inputDannText{
+   height: 45px;
+   width: 100%;
+   font-size: 25px;
+}
+.infoNumber{   
+   height: 45px;
+   width: 45px;
+   font-size: 25px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+/*Основные стили сайта*/
+.output{
+   background: #d5d5ff;
+   width: 1250px;
+   font-size: 25px;
+   display: flex;
+   flex-direction: column;
+}
+.outputDann{
+   display: flex;
+   flex-direction: column;
+}
+.horizontal{
+   display: flex;
+   flex-direction: row;
+}
+
+/*Стили для окон в которые будет выводиться информация из файла*/
+.Number{
+   width: 10%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   border: double;
+}
+.TextDann{
+   width: 20%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   border: double;
+}
+.HexDann{
+   width: 70%;
+   height: 100%;
+   display: flex;
+   justify-content: flex-start;
+   gap: 1.1%;
+   align-items: center;
+   border: double;
+}
