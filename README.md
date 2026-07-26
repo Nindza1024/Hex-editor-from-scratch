@@ -8,7 +8,7 @@ The project is actively being written from scratch. The ready-made modules are m
 
 
 > ## 📚 Оглавление и статус обучающих статей (Table of contents and status of educational articles)
-- ### 📖  [Как создать простой шестнадцатеричный (Hex) редактор на чистом html, css, javascript](Educational_Articles/Learning_Articles_How_to_Make_a_Hex_Editor_Part_1_ru.md) 🛠️ «В разработке»
+- ### 📖  [Как создать простой шестнадцатеричный (Hex) редактор на чистом html, css, javascript](Educational_Articles/Learning_Articles_How_to_Make_a_Hex_Editor_Part_1_ru.md) 🛠️ «В разработке»  [Протестировать сайт](https://nindza1024.github.io/Hex-editor-from-scratch/HexRedactor_v1/)
 > ## 🚀 Реализованный функционал (Implemented functionality)
 >
 > ## ⚖️ Лицензия и правила использования кода (License)
