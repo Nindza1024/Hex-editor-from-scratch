@@ -466,7 +466,7 @@ function createHexRedactorLine(lengthLine,number){ //сгенерировать 
    return panel; // Возвращаем главный "div" элемент
 }
 
-function updateInputTextElement(element){
+function updateInputTextElement(element){ // Обновить поле в правой панели
    hexArray = dannArray.slice(element.getAttribute("numstart"),element.getAttribute("numend")); //берем часть массива dannArray согласно атрибутам начальной и конечной позиции
    const byteArray = []; // Создаем пустой массив в который будем записывать коды символов
    let decimalValue; // создаем переменную, хранящую общий код символа (1 или 2 байта)
