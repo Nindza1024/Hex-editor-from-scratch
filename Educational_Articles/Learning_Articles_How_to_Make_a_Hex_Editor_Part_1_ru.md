@@ -200,12 +200,12 @@ function readFile(dann){ //чтение файла
       dannArray[dannArray.length]=hex; // Добавляем новый элемент в массив
    }
    text=new TextDecoder('utf-8').decode(uint8Array); //так можно получить текст из файла
-   console.log('текст:', text); // Выводим результат вв консоль в виде текста
-   console.log('Шестнадцатеричное представление:', dannArray); // Выводим результат вв консоль в виде Hex текста
+   console.log('текст:', text); // Выводим результат в консоль в виде текста
+   console.log('Шестнадцатеричное представление:', dannArray); // Выводим результат в консоль в виде Hex текста
 
    document.getElementById("outputDann").textContent =""; // отчищаем поле в которое будем добавлять элементы на сайт
 
-   /*Если осталось больше или равно 16 символов то добавить на экран строку с 16 символами, иначе добавить на экран строку с оставшимеся символами */ 
+   /*Если осталось больше или равно 16 символов то добавить на экран строку с 16 символами, иначе добавить на экран строку с оставшимися символами */ 
    let position = dannArray.length;
    for(let i = 0; i < (dannArray.length/16); i++){
       if(position / 16 >= 1){
@@ -238,7 +238,7 @@ function loadFile(dann){ // Загрузка файла
 
 Строка ```//document.getElementById("outputDann").appendChild(createHexRedactorLine(dannArray.slice( i, i+(position % 16) ),i));``` временно закомментирована до написания функции ```createHexRedactorLine(lengthLine,number)``` в которую подается массив из 1-16 элементов (переменная lengthLine) и позиция этих элементов. Именно в этой функции будут генерироваться окна для вывода на экран пользователя.
 
-На данном этапе код из функций readFile(dann) и loadFile(dann) позволяет открыть почти любой файл, содержащий английские, русские и специальные символы. Проверим работоспособность кода на тестовом файле. Для этого создаем файл test.txt и пишем в него разные символы. Далее открываем его с помошью написанного сайта. На сайте открываем консоль разработчика и смотрим что выдает console.log(). Результат представлен на рисунке:
+На данном этапе код из функций readFile(dann) и loadFile(dann) позволяет открыть почти любой файл, содержащий английские, русские и специальные символы. Проверим работоспособность кода на тестовом файле. Для этого создаем файл test.txt и пишем в него разные символы. Далее открываем его с помощью написанного сайта. На сайте открываем консоль разработчика и смотрим что выдает console.log(). Результат представлен на рисунке:
 
 ![Результат работы кода js](../Images_for_Learning_Articles/Images_2.png)
 
@@ -250,5 +250,74 @@ function loadFile(dann){ // Загрузка файла
 
 
 Как видно по рисункам данные правильно загружаются.
+
+Теперь необходимо написать функцию ```createHexRedactorLine(lengthLine,number)``` которая будет создавать и возвращать объект с сеткой для ввода данных в 16-ричной системе на экране пользователя. Для этого добавим следующий код:
+
+```javascript
+function createHexRedactorLine(lengthLine,number){ //сгенерировать линию для 16-ричного редактора с lengthLine байтами
+   const panel=document.createElement('div'); // Создать новый див элемент куда будут помещаться остальные элементы
+   panel.className="horizontal"; // Установить имя класса
+   const pRight=document.createElement('div'); // Создать новый див элемент куда будет помещаться информация в виде текста (правая панель)
+   pRight.className="TextDann"; // Установить имя класса
+   const pCenter=document.createElement('div'); // Создать новый див элемент куда будет помещаться информация в виде 16-ричного кода (средняя панель)
+   pCenter.className="HexDann"; // Установить имя класса
+   const pLeft=document.createElement('div'); // Создать новый див элемент где будет написана позиция элемента (левая панель)
+   pLeft.className="Number"; // Установить имя класса
+   pLeft.innerHTML = (number*16).toString().padStart(8, '0'); // В левую панель написать позицию элемента с учётом 8 символов
+
+   const inputText=document.createElement('input');  // Создаем поле для отображения текста целиком
+   inputText.disabled = true; // Запрещаем редактировать данное поле, так как его редактирование может привести к искажению при переводе на 16-ричную систему
+   inputText.className="inputDannText"; // Установить имя класса
+   inputText.setAttribute("numstart", number*16 ); // Установить атрибут, отвечающий за начальную позицию этого элемента
+   inputText.setAttribute("numend", number*16+lengthLine.length ); // Установить атрибут, отвечающий за конечную позицию этого элемента
+   pRight.appendChild(inputText); // Добавляем созданное поле на правую панель
+
+   // В зависимости от размера массива создаем поля для ввода данных в 16-ричном формате
+   if(lengthLine.length <= 16){
+      for(let i = 0; i < lengthLine.length; i++){
+         const input = document.createElement('input'); // Создаем поле для отображения 1 байта в 16-ричном формате (от 00 до FF)
+         input.className="inputDann"; // Установить имя класса
+         input.setAttribute('num', i+(number*16) ); // Установить атрибут, отвечающий за точную позицию этого элемента (порядковый номер)
+         input.gotoInputText = inputText; // Передать переменную отвечающую за поле для отображения текста целиком
+         input.addEventListener('keypress', isHexInputDann); // Добавить слушатель, срабатывающий при нажатии клавиши
+         input.addEventListener('input', isHexInputDannReplase); // Добавить слушатель, срабатывающий при любом изменении значения поля
+         input.value = dannArray[i+(number*16)].toUpperCase(); // Добавить текст из загруженного файла 
+         pCenter.appendChild(input); // Добавляем созданное поле на среднюю панель 
+      }
+      updateInputTextElement(inputText); // Вызываем функцию для обновления поля в правой панели
+   }
+   panel.appendChild(pLeft); // Добавляем левую панель в главный "div" элемент
+   panel.appendChild(pCenter); // Добавляем среднюю панель в главный "div" элемент
+   panel.appendChild(pRight); // Добавляем правую панель в главный "div" элемент
+   return panel; // Возвращаем главный "div" элемент
+}
+
+```
+
+Теперь для того чтобы данный код работал необходимо реализовать 3 функции ```updateInputTextElement(element)```, ```isHexInputDann(input)``` и ```isHexInputDannReplase(input)```, которые отвечают за обновление текстового поля в правой панели и глобальной переменной ```dannArray```. Начнем с функции ```updateInputTextElement(element)``` задачей которой является взять часть 16-ричного массива из глобальной переменной ```dannArray```, перевести его в текст и вывести этот текст на экран в правую панель в созданное заранее поле ```inputText```. Для этого добавим следующий код:
+
+```javascript
+//////////////////////////////// Генерация элементов ////////////////////////////////
+function updateInputTextElement(element){
+   hexArray = dannArray.slice(element.getAttribute("numstart"),element.getAttribute("numend")); //берем часть массива dannArray согласно атрибутам начальной и конечной позиции
+   const byteArray = []; // Создаем пустой массив в который будем записывать коды символов
+   let decimalValue; // создаем переменную, хранящую общий код символа (1 или 2 байта)
+   for (let i = 0; i < hexArray.length; i++) {
+      decimalValue = parseInt(hexArray[i], 16); //Преобразование из 16-ричной системы в 10-ричную
+      byteArray.push(decimalValue); //добавляем новый элемент в массив
+   }
+   // Создаём Uint8Array и декодируем как UTF‑8
+   const uint8Array = new Uint8Array(byteArray); 
+   const decoder = new TextDecoder('utf-8');
+   const resultText = decoder.decode(uint8Array);
+
+   element.value = resultText; // Записываем полученный текст на экран пользователя
+}
+
+// Далее будут написаны следующие функции
+function isHexInputDann(input){} 
+function isHexInputDannReplase(input){}
+
+```
 
 
