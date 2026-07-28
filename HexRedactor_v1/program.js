@@ -5,6 +5,7 @@ var sizeFile=""; // Размер открытого файла
 var typeFile=""; // Тип открытого файла
 
 //////////////////////////////// Генерация элементов ////////////////////////////////
+
 function createHexRedactorLine(lengthLine,number){ //сгенерировать линию для 16-ричного редактора с lengthLine байтами
    const panel=document.createElement('div'); // Создать новый див элемент куда будут помещаться остальные элементы
    panel.className="horizontal"; // Установить имя класса
@@ -43,7 +44,7 @@ function createHexRedactorLine(lengthLine,number){ //сгенерировать 
    return panel; // Возвращаем главный "div" элемент
 }
 
-function updateInputTextElement(element){
+function updateInputTextElement(element){ // Обновить поле в правой панели
    hexArray = dannArray.slice(element.getAttribute("numstart"),element.getAttribute("numend")); //берем часть массива dannArray согласно атрибутам начальной и конечной позиции
    const byteArray = []; // Создаем пустой массив в который будем записывать коды символов
    let decimalValue; // создаем переменную, хранящую общий код символа (1 или 2 байта)
@@ -57,6 +58,48 @@ function updateInputTextElement(element){
    const resultText = decoder.decode(uint8Array);
 
    element.value = resultText; // Записываем полученный текст на экран пользователя
+}
+
+function isHexInputDann(input){ // При нажатии клавиши
+   const char = input.key.toUpperCase(); // Берем заглавный нажатый символ
+   this.value = this.value.toUpperCase(); // У текущего значения поля делаем все буквы заглавными
+   if (!/[0-9A-FФИСВУАфисвуа]/.test(char)) { // Если символ не 0123456789ABCDEFФИСВУАфисвуа то не пишем его
+      input.preventDefault(); // Блокируем ввод недопустимого символа
+   }
+}
+function isHexInputDannReplase(input){ // При изменении текста
+   let cursorPosition = this.selectionStart; //сохранить текущее положение курсора
+   // Заменяем все допустимые русские буквы на английские
+   this.value = this.value.toUpperCase().replace('Ф','A');
+   this.value = this.value.toUpperCase().replace('И','B');
+   this.value = this.value.toUpperCase().replace('С','C');
+   this.value = this.value.toUpperCase().replace('В','D');
+   this.value = this.value.toUpperCase().replace('У','E');
+   this.value = this.value.toUpperCase().replace('А','F');
+   this.value = this.value.toUpperCase().replace(/[^0-9A-FФИСВУАфисвуа]/g, '0'); // русско-английская клавиатура и замена на 0 других символов
+
+   if (this.value.length > 2) { // не больше 2 символов
+      this.value = this.value.slice(0, 2); // если введено больше 2 символов то взять только первые 2
+   }
+   if(this.value.length != 2){
+      this.style.color="#ff0000";  // если введено не 2 символа то поменять цвет на красный (ошибка)
+   }
+   else{
+      this.style.color="#000000"; // если введено 2 символа то поменять цвет на черный (все правильно)
+      dannArray[this.getAttribute("num")]= this.value; // Сохранить новый байт в глобальную переменную по порядковому номеру
+   }
+   this.setSelectionRange(cursorPosition,cursorPosition); // Вернуть положение курсора 
+
+   if(cursorPosition == 2){ //если курсор после 2 символа перейти на следующую ячейку
+      const element = document.querySelectorAll(".inputDann"); // получить массив со всеми ячейками ввода
+      for(let i = 0 ; i < element.length-1; i++){
+         if (i == this.getAttribute("num")) { // поиск текущего положения по порядковому номеру
+            element[i+1].focus(); // установить фокус на следующий элемент
+            element[i+1].setSelectionRange(0,0); // установить фокус в начало
+         }
+      }
+   }
+   updateInputTextElement(this.gotoInputText); // Обновить текстовое поле в правой панели
 }
 
 //////////////////////////////// Работа с файлом и текстом в 16-ричной системе ////////////////////////////////
