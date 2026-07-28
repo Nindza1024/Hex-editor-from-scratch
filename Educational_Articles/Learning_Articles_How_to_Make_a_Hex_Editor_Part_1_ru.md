@@ -323,4 +323,68 @@ function isHexInputDannReplase(input){}
 
 ```
 
+Теперь для проверки кода необходимо раскомментировать следующий код из функции ```function readFile(dann){ //чтение файла```.:
+```javascript
+for(let i = 0; i < (dannArray.length/16); i++){
+      if(position / 16 >= 1){
+         document.getElementById("outputDann").appendChild(createHexRedactorLine(dannArray.slice(i, i+16),i)); 
+      }
+      else{
+         document.getElementById("outputDann").appendChild(createHexRedactorLine(dannArray.slice( i, i+(position % 16) ),i));
+      }
+      position = position - 16;
+}
+```
+Далее запускаем сайт и пробуем открыть файл ```test.txt```. В результате должно получиться следующее:
 
+![Результат работы кода js](../Images_for_Learning_Articles/Images_4.png)
+
+Как видно из рисунка редактор полностью работает, все данные загружаются, данные из средней панели можно редактировать, а данные из правой и левой панели редактировать нельзя. Единственное исключение возникает в предложении "Привет мир". Как видно первую букву "и" преобразовать в текст не удается. Это происходит из-за того что русские символы занимают 2 байта вместо одного а функция ```updateInputTextElement(element)``` берет ограниченное число байт (в соответствии с длиной строки). В результате вместо того чтобы преобразовывать ```D0B8->и```, как это происходит во втором случае (слово "мир"), происходит 2 преобразования ```D0->�``` и ```B8->�```. Именно поэтому при генерации текстового поля с помощью ```inputText.disabled = true;``` было запрещено его редактировать.
+
+Далее напишем функции, срабатывающие при вводе информации в среднюю панель:
+
+```javascript
+function isHexInputDann(input){ // При нажатии клавиши
+   const char = input.key.toUpperCase(); // Берем заглавный нажатый символ
+   this.value = this.value.toUpperCase(); // У текущего значения поля делаем все буквы заглавными
+   if (!/[0-9A-FФИСВУАфисвуа]/.test(char)) { // Если символ не 0123456789ABCDEFФИСВУАфисвуа то не пишем его
+      input.preventDefault(); // Блокируем ввод недопустимого символа
+   }
+}
+function isHexInputDannReplase(input){ // При изменении текста
+   let cursorPosition = this.selectionStart; //сохранить текущее положение курсора
+   // Заменяем все допустимые русские буквы на английские
+   this.value = this.value.toUpperCase().replace('Ф','A');
+   this.value = this.value.toUpperCase().replace('И','B');
+   this.value = this.value.toUpperCase().replace('С','C');
+   this.value = this.value.toUpperCase().replace('В','D');
+   this.value = this.value.toUpperCase().replace('У','E');
+   this.value = this.value.toUpperCase().replace('А','F');
+   this.value = this.value.toUpperCase().replace(/[^0-9A-FФИСВУАфисвуа]/g, '0'); // русско-английская клавиатура и замена на 0 других символов
+
+   if (this.value.length > 2) { // не больше 2 символов
+      this.value = this.value.slice(0, 2); // если введено больше 2 символов то взять только первые 2
+   }
+   if(this.value.length != 2){
+      this.style.color="#ff0000";  // если введено не 2 символа то поменять цвет на красный (ошибка)
+   }
+   else{
+      this.style.color="#000000"; // если введено 2 символа то поменять цвет на черный (все правильно)
+      dannArray[this.getAttribute("num")]= this.value; // Сохранить новый байт в глобальную переменную по порядковому номеру
+   }
+   this.setSelectionRange(cursorPosition,cursorPosition); // Вернуть положение курсора 
+
+   if(cursorPosition == 2){ //если курсор после 2 символа перейти на следующую ячейку
+      const element = document.querySelectorAll(".inputDann"); // получить массив со всеми ячейками ввода
+      for(let i = 0 ; i < element.length-1; i++){
+         if (i == this.getAttribute("num")) { // поиск текущего положения по порядковому номеру
+            element[i+1].focus(); // установить фокус на следующий элемент
+            element[i+1].setSelectionRange(0,0); // установить фокус в начало
+         }
+      }
+   }
+   updateInputTextElement(this.gotoInputText); // Обновить текстовое поле в правой панели
+}
+```
+
+Таким образом реализован правильный ввод информации в 16-ричном режиме с учётом раскладки клавиатуры, перемещением фокуса между ячейками, ограничением в 2 символа и обновлением информации в глобальной переменной и правой панели
